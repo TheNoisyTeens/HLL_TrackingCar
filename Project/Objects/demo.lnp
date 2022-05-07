@@ -40,8 +40,11 @@
 ".\objects\delay.o"
 ".\objects\sys.o"
 ".\objects\pid.o"
+".\objects\move.o"
+".\objects\track.o"
 ".\objects\usart3.o"
 ".\objects\can1.o"
+".\objects\led.o"
 --strict --scatter ".\Objects\demo.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

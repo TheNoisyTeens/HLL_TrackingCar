@@ -39,3 +39,5 @@
 .\objects\main.o: ..\DEVICE\inc\can1.h
 .\objects\main.o: ..\USERLIB\inc\delay.h
 .\objects\main.o: ..\USERLIB\inc\sys.h
+.\objects\main.o: ..\USERLIB\inc\power.h
+.\objects\main.o: ..\HARDWARE\led\inc\led.h

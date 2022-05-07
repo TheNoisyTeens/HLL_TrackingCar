@@ -13,9 +13,9 @@
 typedef struct _MotorEncoder_t
 {
 	u8 is_first_power_on_flag;
-	short cur_mechanical_angle;
-	short old_mechanical_angle;
-	short cur_speed;
+	short cur_mechanical_angle;//当前机械角度
+	short old_mechanical_angle;//前一刻机械角度
+	short cur_speed;//当前速度
 	
 	short cur_mechanical_angle_dev;
 	int cur_integral_angle;

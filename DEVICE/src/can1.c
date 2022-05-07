@@ -67,8 +67,36 @@ void InitCan1NVIC(void)
 
 
 
+/*
+* 功能：发送数据（电流值）给底盘电机——————————————OK
+*/
+void Can1SendMsg2Chassis(int16_t fl, int16_t fr, int16_t bl, int16_t br)
+{
+		CanTxMsg tx_message;
+    tx_message.StdId = 0x200;    //电调接收报文
+    tx_message.IDE = CAN_Id_Standard;
+    tx_message.RTR = CAN_RTR_Data;
+    tx_message.DLC = 0x08; //数据长度为8字节,高位先行
+    tx_message.Data[0] = (uint8_t)(fl >> 8); //fl高8位
+    tx_message.Data[1] = (uint8_t)fl;        //fl低8位
+    tx_message.Data[2] = (uint8_t)(fr >> 8);
+    tx_message.Data[3] = (uint8_t)fr;
+    tx_message.Data[4] = (uint8_t)(bl >> 8);
+    tx_message.Data[5] = (uint8_t)bl;
+    tx_message.Data[6] = (uint8_t)(br >> 8);
+    tx_message.Data[7] = (uint8_t)br;
+    CAN_Transmit(CAN1,&tx_message);
+}
+
+
+
+
 float power_data[4];
 
+/*
+***********CAN接收中断***********************
+* 功能：CAN接收电调数据
+*/
 void CAN1_RX0_IRQHandler(void)
 {
 	static u16 can_cnt = 100;
@@ -77,7 +105,9 @@ void CAN1_RX0_IRQHandler(void)
 	{
 		CAN_ClearITPendingBit(CAN1, CAN_IT_FF0);
 		CAN_Receive(CAN1, CAN_FIFO0, &can1_rx_msg);	
+
 		
+			//四个电机机械角度和数据——PID
 			switch(can1_rx_msg.StdId)
 			{
 				case 0x201:
@@ -120,26 +150,3 @@ void CAN1_RX0_IRQHandler(void)
 		}
   }
 }
-
-
-/*
-* 功能：发送数据（电流值）给底盘电机
-*/
-void Can1SendMsg2Chassis(int16_t fl, int16_t fr, int16_t bl, int16_t br)
-{
-		CanTxMsg tx_message;
-    tx_message.StdId = 0x200;    //电调接收报文
-    tx_message.IDE = CAN_Id_Standard;
-    tx_message.RTR = CAN_RTR_Data;
-    tx_message.DLC = 0x08; //数据长度为8字节,高位先行
-    tx_message.Data[0] = (uint8_t)(fl >> 8); //fl高8位
-    tx_message.Data[1] = (uint8_t)fl;        //fl低8位
-    tx_message.Data[2] = (uint8_t)(fr >> 8);
-    tx_message.Data[3] = (uint8_t)fr;
-    tx_message.Data[4] = (uint8_t)(bl >> 8);
-    tx_message.Data[5] = (uint8_t)bl;
-    tx_message.Data[6] = (uint8_t)(br >> 8);
-    tx_message.Data[7] = (uint8_t)br;
-    CAN_Transmit(CAN1,&tx_message);
-}
-
